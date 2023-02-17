@@ -9,8 +9,21 @@
 		-webkit-user-select: none;
 		-ms-user-select: none;
 	}
+
+		.slider {
+	display: block; 
+	height: 25px;
+	border-radius: 6px; 
+	outline: none;
+	}
+
+	.slider input { 
+	width:100%;
+	}
+	
 	</style>
 </head>
+
 
 <body>
 	<div style="width:100%;height:100%">
@@ -20,9 +33,27 @@
 	<br><img src = "arena.PNG" id = "arenaimage" width="1" height="1">
 
 
+
+	//---------SLIDERS-----------//
+	<div class="slidecontainer">
+		<input type="range" min="0" max="255" value="128" class="slider" id="alpha_offset_slider">
+	  </div>
+
+
+
+
+
+
+	
 	<script>
 
+
+
+		
+
+
 		var ResultData;
+		var PosArray = [];
 
         window.onload = function() 
         {
@@ -31,10 +62,12 @@
   			var canvas = document.getElementById("basecanvas");
   			var ctx = canvas.getContext("2d");
   			var img = document.getElementById("arenaimage");
-  			ctx.drawImage(img, 0, 0);
+
+		
+  			//ctx.drawImage(img, 0, 0);
 			
 			
-			setInterval(Refresh, 50); //circle placement interval
+			setInterval(Refresh, 10); //circle placement interval
 		};
 
 		function Refresh() 
@@ -60,24 +93,102 @@
 			}
 		};	
 
+
+
 		function Draw(Results)
-		{
-			var ctx = document.getElementById('basecanvas').getContext('2d');
+        {
+            var canvas = document.getElementById('basecanvas');
+            var ctx = canvas.getContext('2d');
+			var circle_radius = 5;
 
-			//draw a dot
-			ctx.fillStyle = "#FFA500AA";
-			ctx.beginPath();
-			ctx.arc(Results.camx, Results.camy, 5, 0, Math.PI*2, true); //Circle diameter
-			ctx.closePath();
-			ctx.fill();
+            if (PosArray.length > 31)
+            {
+                PosArray.shift();
+            }
+            PosArray.push(Results);
 
-			//draw a dot
-			ctx.fillStyle = "#A5FF00AA";
-			ctx.beginPath();
-			ctx.arc(Results.encx, Results.ency, 5, 0, Math.PI*2, true); //Circle diameter
-			ctx.closePath();
-			ctx.fill();
-		};
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+			
+			ctx.drawImage(document.getElementById("arenaimage"), 0, 0);
+
+
+
+            for (var i = 0; i < PosArray.length; i++)
+            {
+
+
+				
+
+
+
+
+				//var OpacityOffset = 0
+				// R, G, B, i-offset(Alpha)
+				//var circle_alpha = ((i * 8) - (0));
+				var circle_alpha = (0);
+
+
+				if (circle_alpha < 1) {
+				var circle_alpha = 1;
+				}
+
+                var CamColor = HexCode(134, 235, 102, ((i * 8) - (0)));
+				var EncColor = HexCode(214, 65, 45, ((i * 8) - (0)));
+
+                console.log(CamColor);
+
+                ctx.fillStyle = CamColor;
+                ctx.beginPath();
+                ctx.arc(PosArray[i].camx, PosArray[i].camy, circle_radius, 0, Math.PI*2, true);
+                ctx.closePath();
+                ctx.fill();
+
+				
+                //draw a dot
+                ctx.fillStyle = EncColor;
+                ctx.beginPath();
+                ctx.arc(PosArray[i].encx, PosArray[i].ency, circle_radius, 0, Math.PI*2, true);
+                ctx.closePath();
+                ctx.fill();
+				
+
+				
+				var alpha_slider = document.getElementById("alpha_offset_slider");
+				var output = document.getElementById("alpha_offset_slider");
+				output.innerHTML = alpha_slider.value; // Display the default slider value
+
+				// Update the current slider value (each time you drag the slider handle)
+				alpha_slider.oninput = function() {
+				output.innerHTML = this.value;
+				}
+				var test = alpha_slider;
+
+
+            }
+        };
+
+
+
+		function HexCode(r, g, b, a)
+        {
+            const hex = '#' + componentToHex(r) + componentToHex(g) + componentToHex(b) + componentToHex(a);
+            
+            return hex;
+        }
+
+        function componentToHex(c) 
+        {
+            var hex = c.toString(16);
+            return hex.length == 1 ? "0" + hex : hex;
+        }
+
+
+
+
+
+		
+
 
 
         
