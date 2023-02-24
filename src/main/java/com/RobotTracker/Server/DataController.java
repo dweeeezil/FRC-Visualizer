@@ -30,10 +30,10 @@ public class DataController
                                                                  defaultValue = "") 
                                                                  final String Set) 
     {    
-        double TX = Table.getNumber("X", 0.0);
+        double TX = Table.getNumber("X", 0.0); //THESE ARE THE ADDRESSES FOR THE DATA
         double TY = Table.getNumber("Y", 0.0);
 
-        System.out.println("X: " + TX + "    Y: " + TY); 
+        System.out.println("X: " + TX + "    Y: " + TY); //Use this to check if data is correct.
         
         JSONObject BaseResults = new JSONObject();
 
@@ -58,7 +58,7 @@ public class DataController
         X = Center + XVal.intValue();
         Y = Center + YVal.intValue();
 
-        BaseResults.put("encx", X);
+        BaseResults.put("encx", X); //This outputs to the HTML file
         BaseResults.put("ency", Y);
 
         return ResponseEntity.ok(BaseResults.toString());
