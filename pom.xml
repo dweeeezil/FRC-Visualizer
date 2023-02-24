@@ -37,7 +37,19 @@
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20180130</version>
-		</dependency>		
+		</dependency>	
+		
+		<dependency>
+            <groupId>com.NetworkTable</groupId>
+            <artifactId>NetworkTable</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/src/main/resources/NetworkTables-desktop.jar</systemPath>
+        </dependency>   
+
+
+
+
 	</dependencies>
 
 	<build>
