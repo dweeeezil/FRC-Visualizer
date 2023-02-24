@@ -20,8 +20,8 @@ public class DataController
     public DataController()
     {
         NetworkTable.setClientMode();
-        NetworkTable.setIPAddress("10.37.49.222");
-        Table = NetworkTable.getTable("datatable");
+        NetworkTable.setIPAddress("10.37.49.222"); //Replace with RoboRio IP.
+        Table = NetworkTable.getTable("datatable"); //Replace with Networktable table name.
     }
     
     
