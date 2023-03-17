@@ -1,0 +1,402 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>Robot Tracker</title>
+	<style>
+
+
+	canvas{
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		-ms-user-select: none;
+	}
+
+	#slider_super{
+	display:flex;
+	}
+
+
+	.slidercaption {
+	display: inline-block;
+	float: left;
+	}
+
+
+	.slidercontainer{
+	width: 100%;
+	float: center;
+	display: inline-block;
+	}
+
+
+	.slider {
+	-webkit-appearance: none;
+	width: 100%;
+	height: 100%;
+	background: white;
+	outline: none;
+	opacity: 1;
+	-webkit-transition: .2s;
+	transition: opacity .2s;
+	display: inline-block;
+	float: left;
+	}
+
+	.slider input { 
+	width:100%;
+	}
+
+	html, body {
+	width:  100%;
+	height: 100%;
+	margin: 0px;
+	}
+
+
+
+	h1 {
+	font-size: 2.5em; /* 40px/16=2.5em */
+	}
+
+	h2 {
+	font-size: 1.875em; /* 30px/16=1.875em */
+	}
+
+	h3 {
+	font-size: 1.125em; /* 18px/16=1.875em */
+	}
+
+	h4 {/*	USE THIS FOR TABLE ENTRIES	*/
+		font-size: 1.125em;
+		color: white;
+		text-align: center;
+		/*text-indent: 15px;*/
+	}
+
+	p {
+	font-size: 0.875em; /* 14px/16=0.875em */
+	}
+
+	table, th, td {
+	border: 1px solid white;
+	background-color: #f44336;
+	border-collapse: collapse;
+	}
+	
+	
+	</style>
+</head>
+
+<link rel="stylesheet" href="w3.css">
+
+<body>
+
+	<div class="w3-container w3-red">
+		<h1>Team 5419 Robot Tracker</h1>
+	  </div>
+	
+	<div style="width:100%;height:100%">
+		<canvas id="basecanvas" width="1318" height="808" style="border:1px solid"></canvas>
+	</div>
+
+	<br>
+	
+	<br><img src = "arena.PNG" id = "arenaimage" width="1" height="1">
+	<br>
+	
+
+
+
+
+	<table width = "600" id = "slider_table">
+		<tr>
+			<th><h4>Camera Visual Settings</h4></th>
+			<th><h4>Encoder Visual Settings</h4></th>
+		</tr>
+
+		<tr>
+			<td>
+			<div id = "sliders">
+				<div id = "camera_sliders">
+
+					<div id = slider_super>
+						<div class="slidercaption"><h4>Red: </h4></div>
+						<div class = "slidercontainer">
+							<input type = "range" min = "0" max = "255" value="0" class="slider" id = "camera_red">
+						</div>
+					</div>
+
+					<div id = slider_super>
+						<div class="slidercaption"><h4>Green: </h4></div>
+						<div class = "slidercontainer">
+							<input type = "range" min = "0" max = "255" value="235" class="slider" id = "camera_green">
+						</div>
+					</div>
+
+					<div id = slider_super>
+						<div class="slidercaption"><h4>Blue: </h4></div>
+						<div class = "slidercontainer">
+							<input type = "range" min = "0" max = "255" value="0" class="slider" id = "camera_blue">
+						</div>
+					</div>
+
+					<!--
+					<div id = slider_super>
+						<div class="slidercaption"><h4>Alpha: </h4></div>
+						<div class = "slidercontainer">
+							<input type = "range" min = "0" max = "255" value="255" class="slider" id = "camera_alpha">
+						</div>
+					</div>
+				-->
+
+					</div>
+
+				</div>
+			</td>
+			<td>
+				<div id = "encoder_sliders">
+					
+					<div id = slider_super>
+						<div class="slidercaption"><h4>Red: </h4></div>
+						<div class = "slidercontainer">
+							<input type = "range" min = "0" max = "255" value="255" class="slider" id = "encoder_red">
+						</div>
+					</div>
+
+					<div id = slider_super>
+						<div class="slidercaption"><h4>Green: </h4></div>
+						<div class = "slidercontainer">
+							<input type = "range" min = "0" max = "255" value="0" class="slider" id = "encoder_green">
+						</div>
+					</div>
+
+					<div id = slider_super>
+						<div class="slidercaption"><h4>Blue: </h4></div>
+						<div class = "slidercontainer">
+							<input type = "range" min = "0" max = "255" value="0" class="slider" id = "encoder_blue">
+						</div>
+					</div>
+
+					<!--
+					<div id = slider_super>
+						<div class="slidercaption"><h4>Alpha: </h4></div>
+						<div class = "slidercontainer">
+							<input type = "range" min = "0" max = "255" value="255" class="slider" id = "encoder_alpha">
+						</div>
+					</div>
+				-->
+
+					</div>
+
+				</div>
+			</div>
+			</td>
+		</tr>
+
+	</table>
+
+
+
+	
+<!--
+	<div class="w3-card-4">
+		<img src="arena.png" alt="Arena">
+	</div>
+
+1318
+808
+
+
+
+	//---------SLIDERS-----------//
+	<div class="slidecontainer">
+		<input type="range" min="0" max="255" value="128" class="slider" id="alpha_offset_slider">
+	</div>
+
+
+-->
+
+
+	
+	<script>
+
+
+		var ResultData;
+		var PosArray = [];
+
+        window.onload = function() 
+        {
+
+
+			
+			
+			
+  			var canvas = document.getElementById("basecanvas");
+  			var ctx = canvas.getContext("2d");
+  			var img = document.getElementById("arenaimage");
+
+		
+  			//ctx.drawImage(img, 0, 0);
+			
+			
+			setInterval(Refresh, 10); //circle placement interval
+		};
+
+		function Refresh() 
+		{
+			ResultData = GetData("http://localhost:8080/GetData/");
+			console.log(ResultData);
+			Draw(ResultData);
+		}
+			
+		function GetData(FileName)
+		{
+			var query_request = "";
+			
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET', FileName, false);
+			xhr.setRequestHeader('Accept', 'application/json');
+			xhr.setRequestHeader('Content-Type', 'application/json');
+			xhr.send(query_request);
+		
+			if (xhr.status === 200) 
+			{
+				return JSON.parse(xhr.response);
+			}
+		};	
+
+
+
+		function Draw(Results)
+        {
+				
+
+
+
+            var canvas = document.getElementById('basecanvas');
+            var ctx = canvas.getContext('2d');
+			//ctx.canvas.width  = window.innerWidth;
+			//ctx.canvas.height = window.innerHeight;
+
+
+			var circle_radius = 5;
+
+
+
+
+
+
+            if (PosArray.length > 31)
+            {
+                PosArray.shift();
+            }
+            PosArray.push(Results);
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+			
+			ctx.drawImage(document.getElementById("arenaimage"), 0, 0, ctx.canvas.width, ctx.canvas.height);
+
+
+			
+
+
+            for (var i = 0; i < PosArray.length; i++)
+            {
+				var CameraRed = parseInt((document.getElementById("camera_red").value));
+				var CameraGreen = parseInt((document.getElementById("camera_green").value));
+				var CameraBlue = parseInt((document.getElementById("camera_blue").value));
+				//var CameraAlpha = parseInt((document.getElementById("camera_alpha").value));
+
+
+				var EncoderRed = parseInt((document.getElementById("encoder_red").value));
+				var EncoderGreen = parseInt((document.getElementById("encoder_green").value));
+				var EncoderBlue = parseInt((document.getElementById("encoder_blue").value));
+				//var EncoderAlpha = parseInt((document.getElementById("encoder_alpha").value));
+
+
+
+				//var OpacityOffset = 0
+				// R, G, B, i-offset(Alpha)
+				
+				//var camera_alpha = ((i * 8) - CameraAlpha);
+				//var encoder_alpha = ((i * 8) - EncoderAlphaAlpha);
+
+/*
+				if (circle_alpha < 1) {
+				var circle_alpha = 1;
+				}
+
+				if (encoder_alpha < 1) {
+				var encoder_alpha = 1;
+				}
+*/
+
+                var CamColor = HexCode(CameraRed, CameraGreen, CameraBlue, (i*8));
+				var EncColor = HexCode(EncoderRed, EncoderGreen, EncoderBlue, (i*8));
+
+
+                console.log(CamColor);
+
+                ctx.fillStyle = CamColor;
+                ctx.beginPath();
+                ctx.arc(PosArray[i].camx, PosArray[i].camy, circle_radius, 0, Math.PI*2, true);
+                ctx.closePath();
+                ctx.fill();
+
+				
+                //draw a dot
+                ctx.fillStyle = EncColor;
+                ctx.beginPath();
+                ctx.arc(PosArray[i].encx, PosArray[i].ency, circle_radius, 0, Math.PI*2, true);
+                ctx.closePath();
+                ctx.fill();
+				
+
+				/*
+				var alpha_slider = document.getElementById("alpha_offset_slider");
+				var output = document.getElementById("alpha_offset_slider");
+				output.innerHTML = alpha_slider.value; // Display the default slider value
+				*/
+			
+
+			
+
+
+            }
+        };
+
+
+
+		function HexCode(r, g, b, a)
+        {
+            const hex = '#' + componentToHex(r) + componentToHex(g) + componentToHex(b) + componentToHex(a);
+            
+            return hex;
+        }
+
+        function componentToHex(c) 
+        {
+            var hex = c.toString(16);
+            return hex.length == 1 ? "0" + hex : hex;
+        }
+
+
+
+
+
+		
+
+
+
+        
+	</script>
+</body>
+
+<div class="w3-container w3-red">
+	<h2>FRC Team Berkelium</h2>
+	<p>Made by Alexander Kelly</p>
+  </div>
+
+</html>
